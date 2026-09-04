@@ -1,5 +1,6 @@
 local Workspace = game:GetService("Workspace")
 local UserInputService = game:GetService("UserInputService")
+local Lighting = game:GetService("Lighting")
 local Camera = Workspace.CurrentCamera
 
 local allVisuals = {}
@@ -13,36 +14,43 @@ local function createObj(type, props)
     return obj
 end
 
--- Получаем центр экрана
+-- Центр экрана
 local screenSize = Camera.ViewportSize
 local screenCenter = Vector2.new(screenSize.X / 2, screenSize.Y / 2)
 
--- 1. Полупрозрачный темный фон на весь экран
+-- Красивое размытие заднего плана в игре
+local Blur = Instance.new("BlurEffect")
+Blur.Size = 24
+Blur.Parent = Lighting
+
+-- Полупрозрачный темный фон
 local Background = createObj("Square", {
     Size = screenSize,
     Position = Vector2.new(0, 0),
-    Color = Color3.fromRGB(15, 15, 15),
+    Color = Color3.fromRGB(10, 10, 10),
     Filled = true,
     Transparency = 0.85,
     Visible = true
 })
 
--- 2. Огромный красный текст по центру
+-- Огромный жирный красный текст ровно по центру
 local DeniedText = createObj("Text", {
     Text = "ХУЙ ТЕБЕ ЧИТАК ЕБАНЫЙ!",
-    Size = 50, -- Очень крупный шрифт
+    Size = 120, -- Увеличил размер шрифта
     Center = true,
-    Position = screenCenter - Vector2.new(0, 36), -- Выравнивание по центру
-    Color = Color3.fromRGB(255, 50, 50), -- Ярко-красный цвет
+    Position = screenCenter - Vector2.new(0, 45),
+    Color = Color3.fromRGB(255, 30, 30),
     Outline = true,
     OutlineColor = Color3.fromRGB(0, 0, 0),
     Visible = true
 })
+
 -- Логика закрытия экрана по кнопке Enter
 local connection
-connection = UserInputService.InputBegan:Connect(function(input, processed)
-    if input.KeyCode == Enum.KeyCode.Return then -- Клавиша Enter
-        -- Удаляем все объекты из памяти
+connection = UserInputService.InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.Return then
+        -- Убираем размытие и удаляем 2D графику
+        if Blur then Blur:Destroy() end
         for _, obj in ipairs(allVisuals) do
             pcall(function() obj:Remove() end)
         end
