@@ -38,18 +38,6 @@ local DeniedText = createObj("Text", {
     OutlineColor = Color3.fromRGB(0, 0, 0),
     Visible = true
 })
-
--- 3. Маленькая подсказка снизу
-local HintText = createObj("Text", {
-    Text = "[ Нажмите 'Enter' для закрытия ]",
-    Size = 18,
-    Center = true,
-    Position = screenCenter + Vector2.new(0, 60),
-    Color = Color3.fromRGB(180, 180, 180),
-    Outline = true,
-    Visible = true
-})
-
 -- Логика закрытия экрана по кнопке Enter
 local connection
 connection = UserInputService.InputBegan:Connect(function(input, processed)
