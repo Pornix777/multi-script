@@ -16,8 +16,9 @@ local Colors = {
     BtnOn = Color3.fromRGB(140, 215, 140),       -- Пастельно-зеленый (ВКЛ)
     BtnOff = Color3.fromRGB(243, 150, 150),      -- Пастельно-красный (ВЫКЛ)
     
+    -- Исправленные цвета для игроков
     AllyBlue = Color3.fromRGB(0, 160, 255),      -- Синий цвет для союзников из вайтлиста
-    EnemyGreen = Color3.fromRGB(0, 255, 100)     -- Зеленый цвет для врагов
+    EnemyGreen = Color3.fromRGB(0, 255, 100)     -- Зеленый цвет для обычных врагов
 }
 
 local Settings = {
@@ -42,7 +43,7 @@ local Settings = {
     ClicksPerTick = 1
 }
 
--- Твой Вайтлист игроков
+-- Твой список друзей (Вайтлист)
 local BluePlayers = {
     ["redeeg0"] = true,
     ["megasupchikbrotik"] = true,
@@ -66,7 +67,7 @@ local function createRenderObj(type, props)
     return obj
 end
 local menuPos = Vector2.new(50, 150)
-local menuSize = Vector2.new(200, 380) -- Высота уменьшена, так как кнопка Team убрана
+local menuSize = Vector2.new(200, 380) -- Кнопка Team убрана, высота снова 380
 
 local MenuBg = createRenderObj("Square", {Size = menuSize, Position = menuPos, Color = Colors.BodyYellow, Filled = true, Visible = true, Transparency = 0.95})
 local MenuBorder = createRenderObj("Square", {Size = menuSize, Position = menuPos, Color = Colors.ManePink, Filled = false, Thickness = 3, Visible = true})
@@ -119,6 +120,8 @@ local function setMenuVisibility(state)
     TextCam.Visible = state; BtnNoclipBg.Visible = state; TextNoclip.Visible = state; BtnClickBg.Visible = state; TextClick.Visible = state
     TextFov.Visible = state; BtnMinus.Visible = state; TextMinus.Visible = state; BtnPlus.Visible = state; TextPlus.Visible = state; TextHint.Visible = state
 end
+
+local function isMouseInArea(m, e, s) return m.X >= e.X and m.X <= e.X + s.X and m.Y >= e.Y and m.Y <= e.Y + s.Y end
 
 local dragging, dragStart, startPos = false, Vector2.new(), Vector2.new()
 local inputBeganConn, inputChangedConn, inputEndedConn
@@ -263,7 +266,7 @@ local mainRenderLoop = RunService.RenderStepped:Connect(function()
         BtnCamBg.Color = Settings.FreecamEnabled and Colors.BtnOn or Colors.BtnOff
         TextCam.Text = Settings.FreecamEnabled and "Freecam: ON (Key: V)" or "Freecam: OFF (Key: V)"
         BtnNoclipBg.Color = Settings.NoclipEnabled and Colors.BtnOn or Colors.BtnOff
-        TextNoclip.Text = Settings.NoclipEnabled and "Noclip: ON (Key: N)" or "Noclip: OFF (Key: N)"
+        TextNoclip.Text = Settings.NoclipEnabled and "Noclip: OFF (Key: N)" or "Noclip: OFF (Key: N)"
         BtnClickBg.Color = Settings.AutoclickEnabled and Colors.BtnOn or Colors.BtnOff
         TextClick.Text = Settings.AutoclickEnabled and "Autoclicker: ON (Key: G)" or "Autoclicker: OFF (Key: G)"
     end
